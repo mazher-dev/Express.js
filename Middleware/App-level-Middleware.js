@@ -1,21 +1,24 @@
 const express = require('express');
 const app = express();
+const port = 3000;
 
-app.use((req, res, next) => {
-    console.log(`Request Type: ${req.method}, Request Url : ${req.url}`);
-    next();
-});
+// Middleware function to log request details
+function logRequest(req, res, next) {
+    console.log(`Received ${req.method} request to ${req.url}`);
+    next(); // Passes control to the next middleware or route handler
+}
 
-app.use((req, res, next) => {
-    res.setHeader('X-Request-ID', '12345');
-    next();
-})
+// Apply this middleware to all routes
+app.use(logRequest);
 
 app.get('/', (req, res) => {
     res.send('Home Page');
 });
 
+app.get('/about', (req, res) => {
+    res.send('About Page');
+});
 
-app.listen(3000 , () => {
-    console.log('Server running on http://localhost:3000')
-})
+app.listen(port, () => {
+    console.log(`App running on http://localhost:${port}`);
+});
